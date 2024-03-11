@@ -20,6 +20,10 @@
     <link rel="apple-touch-icon" sizes="180x180" href="{{ asset('template') }}/img/icon/192x192.png">
     <link rel="stylesheet" href="{{ asset('template') }}/css/style.css">
     <link rel="manifest" href="__manifest.json">
+    <link rel="stylesheet" href="{{ asset('template/js/toaster/toastr.min.css') }}">
+    @stack('css_vendor')
+
+    @stack('css')
 </head>
 
 <body style="background-color:#e9ecef;">
@@ -29,6 +33,8 @@
         <div class="spinner-border text-primary" role="status"></div>
     </div>
     <!-- * loader -->
+
+    @yield('header')
 
     <!-- App Capsule -->
     <div id="appCapsule">

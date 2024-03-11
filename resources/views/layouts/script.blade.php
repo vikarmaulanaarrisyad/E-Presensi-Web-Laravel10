@@ -10,6 +10,9 @@
   <script src="https://cdn.amcharts.com/lib/4/charts.js"></script>
   <script src="https://cdn.amcharts.com/lib/4/themes/animated.js"></script>
   <script src="{{ asset('template') }}/js/base.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/webcamjs/1.0.26/webcam.min.js"></script>
+  <script src="{{ asset('js/toastr.min.js') }}"></script>
+  @stack('scripts_vendor')
 
   <script>
       am4core.ready(function() {
@@ -56,3 +59,5 @@
           ];
       }); // end am4core.ready()
   </script>
+
+  @stack('scripts')
