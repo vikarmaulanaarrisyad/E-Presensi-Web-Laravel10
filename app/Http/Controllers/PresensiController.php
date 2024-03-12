@@ -61,7 +61,13 @@ class PresensiController extends Controller
         $karyawan = Karyawan::where('user_id', Auth::user()->id)->first();
         $tglPresensi = date('Y-m-d');
         $jam = date('H:i:s');
+        // -6.9138013,109.1344926
+        $latitudeKantor = -6.9138013;
+        $longitudeKantor = 109.1344926;
         $lokasi = $request->lokasi;
+        $lokasiUser = explode(",", $lokasi);
+        $latitudeUser = $lokasiUser[0];
+        $longitudeUser = $lokasiUser[1];
 
         $cekPresensi = Presensi::where('karyawan_id', Auth::user()->karyawan->id)->where('tgl_presensi', date('Y-m-d'))->count();
 
@@ -75,6 +81,13 @@ class PresensiController extends Controller
         $imageBase64 = base64_decode($imageParts[1]);
         $fileName = $formatName . ".png";
         $file = $folderPath . $fileName;
+
+        // Menghitung jarak radius kantor
+        $jarak = $this->distance($latitudeKantor, $longitudeKantor, $latitudeUser, $longitudeUser);
+        $radius = round($jarak);
+        if ($radius > 20) {
+            return response()->json(['message' => 'Maaf anda berada diluar radius, jarak anda ' . $radius . ' meter dari kantor!'], 422);
+        }
 
         if ($cekPresensi > 0) {
             $absensi_pulang = [
@@ -142,5 +155,21 @@ class PresensiController extends Controller
     public function destroy(string $id)
     {
         //
+    }
+
+
+    // Menghitung jarak radius
+    public function distance($lat1, $lon1, $lat2, $lon2)
+    {
+        $theta = $lon1 - $lon2;
+        $miles = sin(deg2rad($lat1)) * sin(deg2rad($lat2)) +  cos(deg2rad($lat1)) * cos(deg2rad($lat2)) * cos(deg2rad($theta));
+        $miles = acos($miles);
+        $miles = rad2deg($miles);
+        $miles = $miles * 60 * 1.1515;
+        $feet = $miles * 5280;
+        $yards = $feet / 3;
+        $kilometers = $miles * 1.609344;
+        $meters = $kilometers * 1000;
+        return $meters;
     }
 }

@@ -92,11 +92,12 @@
 
             var marker = L.marker([position.coords.latitude, position.coords.longitude]).addTo(map);
 
+            //-6.908262821419684,109.15962572615987
             var circle = L.circle([position.coords.latitude, position.coords.longitude], {
                 color: 'red',
                 fillColor: '#f03',
                 fillOpacity: 0.5,
-                radius: 500
+                radius: 20
             }).addTo(map);
         }
 
@@ -113,7 +114,7 @@
             if (!lokasi) return alert('Lokasi tidak ditemukan');
 
             // Disable the button during the AJAX request
-            $('#takeabsen').text('Loading...').prop('disabled', true);
+            $('#takeabsen').prop('disabled', true);
 
             $.ajax({
                 type: 'POST',
@@ -134,7 +135,7 @@
                     // Disable the button after a successful request
                     $('#takeabsen').prop('disabled', true);
                 },
-                errors: function(errors) {
+                error: function(errors) {
                     toastr.error(errors.responseJSON.message)
 
                     // Enable the button after an unsuccessful request
